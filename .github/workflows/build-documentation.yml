@@ -35,20 +35,21 @@ jobs:
       with:
         dotnet-version: 5.0.x
 
-    - name: Get mono
-      run: |
-        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-        echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
-        sudo apt-get update
-        sudo apt-get install mono-complete --yes
+    # - name: Get mono
+    #   run: |
+    #     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+    #     echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
+    #     sudo apt-get update
+    #     sudo apt-get install mono-complete --yes
 
     - name: Get docfx
       run: |
-        curl -L https://github.com/dotnet/docfx/releases/download/v2.57.2/docfx.zip -o docfx.zip
+        curl -L https://github.com/dotnet/docfx/releases/download/3.0.0-beta1.919%2B66129ddfbc/docfx-linux-x64-3.0.0-beta1.919+66129ddfbc.zip -o docfx.zip
         unzip -d .docfx docfx.zip
+        chmod +x .docfx/docfx
 
     - name: Build docs
-      run:  mono .docfx/docfx.exe
+      run:  .docfx/docfx build
 
     - name: Commit and push
       if: (github.event_name == 'push' || github.event_name == 'repository_dispatch') && github.repository == 'npgsql/doc' && github.ref == 'refs/heads/main'
